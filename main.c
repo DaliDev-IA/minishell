@@ -6,7 +6,7 @@
 /*   By: mohchams <mohchams@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:39:45 by mohchams          #+#    #+#             */
-/*   Updated: 2025/07/17 12:00:00 by grok             ###   ########.fr       */
+/*   Updated: 2025/07/31 16:11:14 by mohchams         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	(void)envp;  // Pour futur init_env
 
+	printf("Starting minishell...\n");
 	while (1)
 	{
 		printf("Entering loop...\n");
@@ -66,9 +67,11 @@ int	main(int ac, char **av, char **envp)
     		print_tokens(l);  // Ajoute ça pour debug
     		free_tokens(l);
 		}
+		else
+			printf("Erreur: parsing des tokens échoué (ex. quote non fermée ou opérateur invalide)\n");
 		free(input);
-		if (l)
-			free_tokens(l);
+		// if (l)
+		// 	free_tokens(l);
 	}
 	return (0);
 }
