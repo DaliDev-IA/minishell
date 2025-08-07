@@ -48,7 +48,7 @@ int get_token_length_with_quotes(char *input, int *i)
 
     while (input[*i + len])
     {
-        if (flag == 0 && isspace(input[*i + len]))
+        if (flag == 0 && ft_isspace(input[*i + len]))
             break;
         if (flag == 0 && operator(input[*i + len]))
             break;

@@ -6,7 +6,7 @@
 /*   By: mohchams <mohchams@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:39:45 by mohchams          #+#    #+#             */
-/*   Updated: 2025/08/06 15:51:55 by mohchams         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:50:18 by mohchams         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void print_tokens(t_token *head)
     t_token *current = head;
     while (current)
     {
-        printf("Token type: %d, value: '%s'\n", current->type, current->value);
+        printf("Token type: %d, value: %s\n", current->type, current->value);
         current = current->next;
     }
     //printf("--- Fin des tokens ---\n");
@@ -75,9 +75,10 @@ int main(int ac, char **av, char **envp)
             print_tokens(token);
             free_tokens(token);
         }
-       // else
-    	//   printf("Erreur: parsing des tokens échoué (ex. quote non fermée ou opérateur invalide)\n");
+       else
+    	  printf("Erreur: parsing des tokens échoué (ex. quote non fermée ou opérateur invalide)\n");
         free(input);
     }
+    rl_clear_history();
     return (0);
 }

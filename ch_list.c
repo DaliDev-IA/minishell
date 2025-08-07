@@ -6,7 +6,7 @@
 /*   By: mohchams <mohchams@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 15:34:06 by mohchams          #+#    #+#             */
-/*   Updated: 2025/08/06 12:50:40 by mohchams         ###   ########.fr       */
+/*   Updated: 2025/08/07 19:40:41 by mohchams         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ void	add_operator_token(t_token **head,
 		len = 2;
 	token->type = handle_return;
 	token->value = ft_substr(input + *i, 0, len);
+	//printf("value token : %s\n", token->value);
+	//fflush(stdout);
 	if (!token->value)
 	{
 		free(token);
