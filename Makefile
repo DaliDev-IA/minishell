@@ -1,20 +1,20 @@
 NAME = minishell
 
-SRCS = lexer.c main.c
+SRCS = lexer.c main.c ch_list.c quotes.c
 
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-INCLUDES = -I. -I./libft
+CFLAGS = -Wall -Wextra -Werror -g
+INCLUDES = -I. -I./libft -I/usr/include/readline
 LIBFT = libft/libft.a
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -lreadline -L/usr/lib/x86_64-linux-gnu -o $(NAME)
 
-src/%.o: src/%.c
+%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):

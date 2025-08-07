@@ -24,7 +24,7 @@ SRCS = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
     get_next_line.c get_next_line_bonus.c \
     ft_printf.c ft_putchar_printf.c ft_putstr_printf.c \
     ft_putnbr_hexa_printf.c ft_putnbr_unsigned.c ft_putnbr_printf.c \
-    ft_percent_printf.c ft_putptr_printf.c 
+    ft_percent_printf.c ft_putptr_printf.c ft_isspace.c
 
 OBJS = $(SRCS:.c=.o)
 
