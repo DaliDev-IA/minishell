@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRCS = lexer.c main.c ch_list.c quotes.c
+SRCS = lexer.c lexer2.c main.c ch_list.c quotes.c parser.c
 
 OBJS = $(SRCS:.c=.o)
 
