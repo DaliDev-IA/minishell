@@ -1,0 +1,9 @@
+common_builtin_echo.test
+common_builtins.tests
+common_expand.test
+common_extras.tests
+common_os_specific.tests
+common_pipes.tests
+common_redirects.tests
+common_syntax.tests
+common_wildcards
