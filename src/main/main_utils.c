@@ -6,7 +6,7 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 22:22:29 by pgavel            #+#    #+#             */
-/*   Updated: 2025/10/03 22:40:38 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 13:55:09 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,28 +53,28 @@ void	process_input(t_shell *shell, char *input)
 	free_tokens(tokens);
 }
 
-// static void	strip_newline(char *str)
-// {
-// 	int	len;
+static void	strip_newline(char *str)
+{
+	int	len;
 
-// 	if (!str)
-// 		return ;
-// 	len = ft_strlen(str);
-// 	if (len > 0 && str[len - 1] == '\n')
-// 		str[len - 1] = '\0';
-// }
+	if (!str)
+		return ;
+	len = ft_strlen(str);
+	if (len > 0 && str[len - 1] == '\n')
+		str[len - 1] = '\0';
+}
 
 static char	*read_input(void)
 {
 	char	*input;
 
-	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
-	// 	|| !isatty(STDERR_FILENO))
-	// {
-	// 	input = get_next_line(STDIN_FILENO);
-	// 	strip_newline(input);
-	// }
-	// else
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
+		|| !isatty(STDERR_FILENO))
+	{
+		input = get_next_line(STDIN_FILENO);
+		strip_newline(input);
+	}
+	else
 		input = readline(PROMPT);
 	return (input);
 }
