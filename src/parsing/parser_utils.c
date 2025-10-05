@@ -5,12 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/23 11:50:12 by pgavel            #+#    #+#             */
-/*   Updated: 2025/08/07 20:00:31 by pgavel           ###   ########.fr       */
+/*   Created: 2025/09/26 18:18:45 by mohchams          #+#    #+#             */
+/*   Updated: 2025/10/05 21:04:17 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	add_redir(t_redir **redirs, t_redir *new_redir)
+{
+	t_redir	*current;
+
+	if (!*redirs)
+		*redirs = new_redir;
+	else
+	{
+		current = *redirs;
+		while (current->next)
+			current = current->next;
+		current->next = new_redir;
+	}
+}
 
 t_redir	*create_redir(t_token_typ type, char *file)
 {
@@ -29,21 +44,6 @@ t_redir	*create_redir(t_token_typ type, char *file)
 		return (NULL);
 	}
 	return (redir);
-}
-
-void	add_redir(t_redir **redirs, t_redir *new_redir)
-{
-	t_redir	*current;
-
-	if (!*redirs)
-		*redirs = new_redir;
-	else
-	{
-		current = *redirs;
-		while (current->next)
-			current = current->next;
-		current->next = new_redir;
-	}
 }
 
 int	count_args(t_token *tokens)
@@ -65,19 +65,6 @@ int	count_args(t_token *tokens)
 	return (count);
 }
 
-t_cmd	*create_cmd(void)
-{
-	t_cmd	*cmd;
-
-	cmd = malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->args = NULL;
-	cmd->redirs = NULL;
-	cmd->next = NULL;
-	return (cmd);
-}
-
 void	add_cmd_to_list(t_cmd **commands, t_cmd *new_cmd)
 {
 	t_cmd	*current_cmd;
@@ -91,4 +78,17 @@ void	add_cmd_to_list(t_cmd **commands, t_cmd *new_cmd)
 			current_cmd = current_cmd->next;
 		current_cmd->next = new_cmd;
 	}
+}
+
+t_cmd	*create_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->args = NULL;
+	cmd->redirs = NULL;
+	cmd->next = NULL;
+	return (cmd);
 }

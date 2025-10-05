@@ -6,11 +6,30 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 11:49:23 by pgavel            #+#    #+#             */
-/*   Updated: 2025/07/23 11:49:24 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 22:36:19 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void	update_env_vars(t_shell *shell, char *old_pwd)
+{
+	char	cwd[MAX_PATH];
+
+	set_env_value(shell, "OLDPWD", old_pwd);
+	if (getcwd(cwd, sizeof(cwd)))
+		set_env_value(shell, "PWD", cwd);
+}
+
+static int	handle_cd_error(char *target_dir, char *old_pwd)
+{
+	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd(target_dir, STDERR_FILENO);
+	ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+	free(target_dir);
+	free(old_pwd);
+	return (1);
+}
 
 static char	*get_target_dir(t_shell *shell, char **args)
 {
@@ -38,25 +57,6 @@ static char	*get_target_dir(t_shell *shell, char **args)
 		return (ft_strdup(target));
 	}
 	return (ft_strdup(args[1]));
-}
-
-static int	handle_cd_error(char *target_dir, char *old_pwd)
-{
-	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-	ft_putstr_fd(target_dir, STDERR_FILENO);
-	ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-	free(target_dir);
-	free(old_pwd);
-	return (1);
-}
-
-static void	update_env_vars(t_shell *shell, char *old_pwd)
-{
-	char	cwd[MAX_PATH];
-
-	set_env_value(shell, "OLDPWD", old_pwd);
-	if (getcwd(cwd, sizeof(cwd)))
-		set_env_value(shell, "PWD", cwd);
 }
 
 int	builtin_cd(t_shell *shell, char **args)

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	open_heredoc(int fd[2])
+static int	open_heredoc(int fd[2])
 {
 	char	*symbolic_link;
 	char	*fd_char;

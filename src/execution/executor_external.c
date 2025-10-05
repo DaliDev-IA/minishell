@@ -6,7 +6,7 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 22:22:42 by pgavel            #+#    #+#             */
-/*   Updated: 2025/10/01 22:22:43 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 23:31:20 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@ static int	wait_and_cleanup(pid_t pid, char *cmd_path, char **env_array)
 		return (128 + sig);
 	}
 	return (1);
+}
+
+static int	execute_child_process(t_cmd *cmd, char *cmd_path, char **env_array,
+	t_shell *shell)
+{
+	setup_child_signals();
+	close(shell->stdin_backup);
+	close(shell->stdout_backup);
+	if (setup_redirections(cmd->redirs) == -1)
+		exit(1);
+	execve(cmd_path, cmd->args, env_array);
+	exit(127);
 }
 
 static int	check_and_find_path(t_cmd *cmd, char **cmd_path, t_shell *shell)

@@ -6,11 +6,21 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 11:50:02 by pgavel            #+#    #+#             */
-/*   Updated: 2025/08/07 19:58:15 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 23:30:12 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	free_env_array(char **env_array)
+{
+	int	i;
+
+	i = 0;
+	while (env_array[i])
+		free(env_array[i++]);
+	free(env_array);
+}
 
 void	free_paths(char **paths)
 {
@@ -45,6 +55,34 @@ char	*check_path_dirs(char **paths, char *cmd)
 	return (NULL);
 }
 
+int	check_file_error(char *cmd)
+{
+	struct stat	st;
+
+	if (access(cmd, F_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd, STDERR_FILENO);
+		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+		return (127);
+	}
+	if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd, STDERR_FILENO);
+		ft_putendl_fd(": Is a directory", STDERR_FILENO);
+		return (126);
+	}
+	if (access(cmd, X_OK) != 0)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd, STDERR_FILENO);
+		ft_putendl_fd(": Permission denied", STDERR_FILENO);
+		return (126);
+	}
+	return (0);
+}
+
 void	print_cmd_not_found(char *cmd, int path_exists)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -53,26 +91,4 @@ void	print_cmd_not_found(char *cmd, int path_exists)
 		ft_putendl_fd(": command not found", STDERR_FILENO);
 	else
 		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-}
-
-void	free_env_array(char **env_array)
-{
-	int	i;
-
-	i = 0;
-	while (env_array[i])
-		free(env_array[i++]);
-	free(env_array);
-}
-
-int	execute_child_process(t_cmd *cmd, char *cmd_path, char **env_array,
-	t_shell *shell)
-{
-	setup_child_signals();
-	close(shell->stdin_backup);
-	close(shell->stdout_backup);
-	if (setup_redirections(cmd->redirs) == -1)
-		exit(1);
-	execve(cmd_path, cmd->args, env_array);
-	exit(127);
 }

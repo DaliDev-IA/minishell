@@ -6,11 +6,35 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 11:49:42 by pgavel            #+#    #+#             */
-/*   Updated: 2025/07/23 11:49:43 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 22:38:04 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	export_variable(t_shell *shell, char *arg)
+{
+	char	*key;
+	char	*value;
+	char	*existing_value;
+
+	parse_export_arg(arg, &key, &value);
+	if (!value)
+	{
+		existing_value = get_env_value(shell, key);
+		if (existing_value)
+			value = ft_strdup(existing_value);
+	}
+	if (!is_valid_identifier(key))
+	{
+		handle_invalid_identifier(arg, key, value);
+		return (1);
+	}
+	set_env_value(shell, key, value);
+	free(key);
+	free(value);
+	return (0);
+}
 
 static void	print_export_var(t_env *env)
 {
@@ -36,30 +60,6 @@ static void	print_all_exports(t_shell *shell)
 			print_export_var(current);
 		current = current->next;
 	}
-}
-
-static int	export_variable(t_shell *shell, char *arg)
-{
-	char	*key;
-	char	*value;
-	char	*existing_value;
-
-	parse_export_arg(arg, &key, &value);
-	if (!value)
-	{
-		existing_value = get_env_value(shell, key);
-		if (existing_value)
-			value = ft_strdup(existing_value);
-	}
-	if (!is_valid_identifier(key))
-	{
-		handle_invalid_identifier(arg, key, value);
-		return (1);
-	}
-	set_env_value(shell, key, value);
-	free(key);
-	free(value);
-	return (0);
 }
 
 int	builtin_export(t_shell *shell, char **args)

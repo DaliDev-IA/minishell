@@ -6,11 +6,26 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 11:50:19 by pgavel            #+#    #+#             */
-/*   Updated: 2025/07/23 11:50:20 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 14:41:20 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void	add_node_to_env(t_shell *shell, t_env *new_node)
+{
+	t_env	*current;
+
+	if (!shell->env)
+		shell->env = new_node;
+	else
+	{
+		current = shell->env;
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
+	}
+}
 
 static t_env	*create_env_node(char *key, char *value)
 {
@@ -30,21 +45,6 @@ static t_env	*create_env_node(char *key, char *value)
 		return (NULL);
 	}
 	return (node);
-}
-
-static void	add_node_to_env(t_shell *shell, t_env *new_node)
-{
-	t_env	*current;
-
-	if (!shell->env)
-		shell->env = new_node;
-	else
-	{
-		current = shell->env;
-		while (current->next)
-			current = current->next;
-		current->next = new_node;
-	}
 }
 
 static void	add_env_var(t_shell *shell, char *env_str)
@@ -90,22 +90,4 @@ void	init_shell(t_shell *shell, char **envp)
 	if (!get_env_value(shell, "PATH"))
 		set_env_value(shell, "PATH",
 			"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
-}
-
-void	cleanup_shell(t_shell *shell)
-{
-	t_env	*current;
-	t_env	*next;
-
-	current = shell->env;
-	while (current)
-	{
-		next = current->next;
-		free(current->key);
-		free(current->value);
-		free(current);
-		current = next;
-	}
-	close(shell->stdin_backup);
-	close(shell->stdout_backup);
 }

@@ -6,11 +6,17 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 11:50:15 by pgavel            #+#    #+#             */
-/*   Updated: 2025/07/23 11:50:16 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 21:21:27 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	restore_redirections(t_shell *shell)
+{
+	dup2(shell->stdin_backup, STDIN_FILENO);
+	dup2(shell->stdout_backup, STDOUT_FILENO);
+}
 
 static int	handle_heredoc_redir(char *file)
 {
@@ -55,10 +61,4 @@ int	setup_redirections(t_redir *redirs)
 		current = current->next;
 	}
 	return (0);
-}
-
-void	restore_redirections(t_shell *shell)
-{
-	dup2(shell->stdin_backup, STDIN_FILENO);
-	dup2(shell->stdout_backup, STDOUT_FILENO);
 }

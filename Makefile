@@ -6,12 +6,16 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SOURCES = 	main/main.c \
-			main/main_utils.c \
+			main/main_loop.c \
 			environment/environment.c \
+			execution/arg_processor.c \
+			src/execution/args_expansion.c \
+			src/execution/args_filter.c \
+			src/execution/args_rebuild.c \
 			execution/executor.c \
-			execution/executor_cmd.c \
 			execution/executor_external.c \
 			execution/executor_utils.c \
+			execution/executor_path.c \
 			execution/executor_pipeline.c \
 			execution/executor_pipeline_utils.c \
 			execution/redirections.c \
@@ -21,21 +25,15 @@ SOURCES = 	main/main.c \
 			init/shell_init.c \
 			init/signals.c \
 			parsing/tokenizer.c \
-			parsing/tokenizer_main.c \
+			parsing/tokenizer_process.c \
 			parsing/tokenizer_utils.c \
-			parsing/tokenizer_helper.c \
+			parsing/tokenizer_parse.c \
 			parsing/parser.c \
-			parsing/parser_main.c \
+			parsing/parser_command.c \
 			parsing/parser_utils.c \
-			parsing/parser_validation.c \
-			parsing/parser_cleanup.c \
-			utils/process_args.c \
-			utils/word_split.c \
-			utils/word_split_utils.c \
-			utils/filter_args.c \
-			utils/utils.c \
+			parsing/parser_memory.c \
 			builtins/builtins.c \
-			builtins/execute_builtin_helpers.c \
+			builtins/builtin_utils.c \
 			builtins/builtin_echo.c \
 			builtins/builtin_cd.c \
 			builtins/builtin_pwd.c \

@@ -5,78 +5,89 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/23 11:50:12 by pgavel            #+#    #+#             */
-/*   Updated: 2025/08/07 19:58:38 by pgavel           ###   ########.fr       */
+/*   Created: 2025/09/26 18:18:40 by mohchams          #+#    #+#             */
+/*   Updated: 2025/10/05 20:57:32 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static t_token	*handle_word_token(t_token *tokens, t_cmd *cmd, int *i)
+static int	check_redir_syntax(t_token *current)
 {
-	cmd->args[*i] = ft_strdup(tokens->value);
-	(*i)++;
-	return (tokens);
-}
-
-static t_token	*handle_redir_token(t_token *tokens, t_cmd *cmd)
-{
-	t_token_typ	redir_type;
-	t_redir		*new_redir;
-
-	redir_type = tokens->type;
-	tokens = tokens->next;
-	if (!tokens || tokens->type != TOKEN_WORD)
-		return (NULL);
-	new_redir = create_redir(redir_type, tokens->value);
-	if (!new_redir)
-		return (NULL);
-	add_redir(&cmd->redirs, new_redir);
-	return (tokens);
-}
-
-static char	**init_args_array(int arg_count)
-{
-	char	**args;
-	int		i;
-
-	args = malloc(sizeof(char *) * (arg_count + 1));
-	if (!args)
-		return (NULL);
-	i = 0;
-	while (i <= arg_count)
-		args[i++] = NULL;
-	return (args);
-}
-
-static t_token	*process_token(t_token *tokens, t_cmd *cmd, int *i)
-{
-	if (tokens->type == TOKEN_WORD)
-		tokens = handle_word_token(tokens, cmd, i);
-	else if (tokens->type >= TOKEN_REDIR_IN
-		&& tokens->type <= TOKEN_REDIR_HEREDOC)
+	if (current->type >= TOKEN_REDIR_IN
+		&& current->type <= TOKEN_REDIR_HEREDOC)
 	{
-		tokens = handle_redir_token(tokens, cmd);
-		if (!tokens)
-			return (NULL);
+		if (!current->next || current->next->type != TOKEN_WORD)
+		{
+			ft_putendl_fd("minishell: syntax error near unexpected token",
+				STDERR_FILENO);
+			return (0);
+		}
 	}
-	return (tokens);
+	return (1);
 }
 
-t_token	*parse_single_cmd(t_token *tokens, t_cmd *cmd)
+static int	validate_tokens_loop(t_token *tokens, t_token **last)
 {
-	int	i;
+	t_token	*current;
 
-	cmd->args = init_args_array(count_args(tokens));
-	if (!cmd->args)
-		return (NULL);
-	i = 0;
-	while (tokens && tokens->type != TOKEN_PIPE)
+	current = tokens;
+	*last = NULL;
+	while (current)
 	{
-		tokens = process_token(tokens, cmd, &i);
-		if (!tokens)
-			return (NULL);
-		tokens = tokens->next;
+		if (!check_redir_syntax(current))
+			return (0);
+		*last = current;
+		current = current->next;
 	}
-	return (tokens);
+	return (1);
+}
+
+static int	check_pipe_error(t_token_typ type)
+{
+	if (type == TOKEN_PIPE)
+	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `|'",
+			STDERR_FILENO);
+		return (0);
+	}
+	return (1);
+}
+
+static int	validate_syntax(t_token *tokens)
+{
+	t_token	*last;
+
+	if (!tokens)
+		return (0);
+	if (!check_pipe_error(tokens->type))
+		return (0);
+	if (!validate_tokens_loop(tokens, &last))
+		return (0);
+	if (last && !check_pipe_error(last->type))
+		return (0);
+	return (1);
+}
+
+t_cmd	*parse_tokens(t_token *tokens)
+{
+	t_cmd	*commands;
+	t_cmd	*new_cmd;
+
+	if (!validate_syntax(tokens))
+		return (NULL);
+	commands = NULL;
+	while (tokens)
+	{
+		new_cmd = create_cmd();
+		if (!new_cmd)
+		{
+			free_commands(commands);
+			return (NULL);
+		}
+		tokens = process_cmd(tokens, new_cmd, &commands);
+		if (!tokens)
+			break ;
+	}
+	return (commands);
 }

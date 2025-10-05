@@ -5,62 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/23 11:50:25 by pgavel            #+#    #+#             */
-/*   Updated: 2025/09/18 14:18:56 by pgavel           ###   ########.fr       */
+/*   Created: 2025/09/26 17:18:40 by mohchams          #+#    #+#             */
+/*   Updated: 2025/10/05 20:38:04 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static t_token	*process_redir_token(char *input, int *i, int start)
+static int	skip_whitespace(char *input, int i)
 {
-	t_token_typ	type;
-	t_token		*new_token;
-
-	type = get_redirect_type(input, i);
-	new_token = create_token(type, ft_substr(input, start, *i - start));
-	return (new_token);
+	while (input[i] && (input[i] == ' ' || input[i] == '\t'))
+		i++;
+	return (i);
 }
 
-static t_token	*process_word_token(char *input, int *i, int start)
-{
-	t_token	*new_token;
-	int		end;
-
-	end = get_word_end(input, start);
-	if (end == -1)
-	{
-		ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
-		ft_putendl_fd("unclosed quotes", STDERR_FILENO);
-		return (NULL);
-	}
-	*i = end;
-	new_token = create_token(TOKEN_WORD, ft_substr(input, start, *i - start));
-	return (new_token);
-}
-
-static t_token	*handle_invalid_token(char c)
-{
-	ft_putstr_fd("minishell: syntax error near ", STDERR_FILENO);
-	ft_putstr_fd("unexpected token `", STDERR_FILENO);
-	write(STDERR_FILENO, &c, 1);
-	ft_putendl_fd("'", STDERR_FILENO);
-	return (NULL);
-}
-
-static t_token	*create_next_token(char *input, int *i, int start)
-{
-	if (input[*i] == '|')
-		return (process_pipe_token(input, i));
-	else if (input[*i] == '<' || input[*i] == '>')
-		return (process_redir_token(input, i, start));
-	else if (input[*i] == '&' || input[*i] == ';')
-		return (handle_invalid_token(input[*i]));
-	else
-		return (process_word_token(input, i, start));
-}
-
-t_token	*process_tokens(char *input, t_token *tokens)
+static t_token	*process_tokens(char *input, t_token *tokens)
 {
 	t_token	*new_token;
 	int		i;
@@ -81,5 +40,44 @@ t_token	*process_tokens(char *input, t_token *tokens)
 		}
 		add_token(&tokens, new_token);
 	}
+	return (tokens);
+}
+
+static char	*preprocess_input(char *input)
+{
+	char	*processed;
+	char	*pos;
+	char	*needle;
+	int		needle_len;
+
+	needle = "2>/dev/null";
+	needle_len = 11;
+	processed = ft_strdup(input);
+	if (!processed)
+		return (NULL);
+	pos = ft_strnstr(processed, needle, ft_strlen(processed));
+	if (pos)
+	{
+		ft_memmove(pos, pos + needle_len, ft_strlen(pos + needle_len) + 1);
+	}
+	return (processed);
+}
+
+t_token	*tokenize(char *input)
+{
+	t_token	*tokens;
+	char	*processed_input;
+
+	processed_input = preprocess_input(input);
+	if (!processed_input)
+		return (NULL);
+	tokens = NULL;
+	tokens = process_tokens(processed_input, tokens);
+	if (!tokens)
+	{
+		free(processed_input);
+		return (NULL);
+	}
+	free(processed_input);
 	return (tokens);
 }

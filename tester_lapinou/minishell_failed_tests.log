@@ -338,9 +338,9 @@ export WAYLAND_DISPLAY="wayland-0"
 export WSL2_GUI_APPS_ENABLED="1"
 export WSLENV="WT_SESSION:WT_PROFILE_ID:"
 export WSL_DISTRO_NAME="Ubuntu"
-export WSL_INTEROP="/run/WSL/350_interop"
+export WSL_INTEROP="/run/WSL/356_interop"
 export WT_PROFILE_ID="{2c4de342-38b7-51cf-b940-2309a097f518}"
-export WT_SESSION="683f227d-39ed-4ed1-a11a-1c5ca6089594"
+export WT_SESSION="30ff4781-4027-4915-ab76-a78b912fd854"
 export XDG_RUNTIME_DIR="/run/user/1000/"
 export ZSH="/home/pgavel/.oh-my-zsh")
   Bash POSIX STDOUT: (export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
@@ -371,9 +371,9 @@ export WAYLAND_DISPLAY="wayland-0"
 export WSL2_GUI_APPS_ENABLED="1"
 export WSLENV="WT_SESSION:WT_PROFILE_ID:"
 export WSL_DISTRO_NAME="Ubuntu"
-export WSL_INTEROP="/run/WSL/350_interop"
+export WSL_INTEROP="/run/WSL/356_interop"
 export WT_PROFILE_ID="{2c4de342-38b7-51cf-b940-2309a097f518}"
-export WT_SESSION="683f227d-39ed-4ed1-a11a-1c5ca6089594"
+export WT_SESSION="30ff4781-4027-4915-ab76-a78b912fd854"
 export XDG_RUNTIME_DIR="/run/user/1000/"
 export ZSH="/home/pgavel/.oh-my-zsh"
 export _="/usr/bin/bash")
@@ -529,8 +529,7 @@ WARN (STDERR Mismatch on PASS): echo hi | cat "./test_files/infile"
 
 WARN (STDERR Mismatch on PASS): echo hi | cat <"./test_files/infile"
   Minishell STDERR: ()
-  Bash POSIX STDERR: (cannot change locale (en_US.UTF-8)
-Broken pipe)
+  Bash POSIX STDERR: (cannot change locale (en_US.UTF-8))
 
 WARN (STDERR Mismatch on PASS): echo hi | echo bye >./outfiles/outfile01 >./outfiles/outfile02
   Minishell STDERR: ()
@@ -645,7 +644,8 @@ WARN (STDERR Mismatch on PASS): echo <"./test_files/infile_big" | cat <"./test_f
 
 WARN (STDERR Mismatch on PASS): echo <"./test_files/infile_big" | echo <"./test_files/infile"
   Minishell STDERR: ()
-  Bash POSIX STDERR: (cannot change locale (en_US.UTF-8))
+  Bash POSIX STDERR: (cannot change locale (en_US.UTF-8)
+Broken pipe)
 
 WARN (STDERR Mismatch on PASS): echo <"./test_files/infile" "bonjour       42"
   Minishell STDERR: ()

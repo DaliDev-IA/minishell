@@ -6,16 +6,11 @@
 /*   By: pgavel <pgavel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 11:50:06 by pgavel            #+#    #+#             */
-/*   Updated: 2025/09/18 13:51:21 by pgavel           ###   ########.fr       */
+/*   Updated: 2025/10/05 22:51:15 by pgavel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static int	is_var_start(char c)
-{
-	return (ft_isalnum(c) || c == '_' || c == '?');
-}
 
 static char	*append_char(char *dst, char c)
 {
@@ -24,6 +19,11 @@ static char	*append_char(char *dst, char c)
 	buf[0] = c;
 	buf[1] = '\0';
 	return (append_str(dst, buf));
+}
+
+static int	is_var_start(char c)
+{
+	return (ft_isalnum(c) || c == '_' || c == '?');
 }
 
 static char	*expand_at(t_shell *shell, char *str, int *i, char *acc)
